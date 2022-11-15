@@ -244,11 +244,11 @@ extension AppointmentListViewController: UITableViewDelegate {
 }
 
 extension Appointment: Hashable {
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
     }
     
-    static func == (lhs: Appointment, rhs: Appointment) -> Bool {
+    public static func == (lhs: Appointment, rhs: Appointment) -> Bool {
         lhs.id == rhs.id
     }
 }

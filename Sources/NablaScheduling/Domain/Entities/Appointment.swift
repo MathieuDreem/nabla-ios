@@ -1,19 +1,19 @@
 import Foundation
 
-struct Appointment {
-    let id: UUID
-    let state: State
-    let start: Date
-    let provider: Provider
-    let videoCallRoom: VideoCallRoom?
+public struct Appointment {
+    public let id: UUID
+    public let state: State
+    public let start: Date
+    public let provider: Provider
+    public let videoCallRoom: VideoCallRoom?
     
-    enum State {
+    public enum State {
         case upcoming
         case finalized
     }
     
-    struct VideoCallRoom {
-        let url: String
-        let token: String
+    public struct VideoCallRoom {
+        public let url: String
+        public let token: String
     }
 }

@@ -1,6 +1,6 @@
 import Foundation
 
-struct Category {
-    let id: UUID
-    let name: String
+public struct Category {
+    public let id: UUID
+    public let name: String
 }
