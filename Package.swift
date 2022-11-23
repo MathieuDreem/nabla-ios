@@ -33,13 +33,14 @@ let package = Package(
     ],
     dependencies: [
         // SDK
-        .package(url: "https://github.com/apollographql/apollo-ios", from: "0.50.0"),
-        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", from: "1.0.3"),
+        .package(url: "https://github.com/apollographql/apollo-ios", .exact("0.51.2")),
+        .package(name: "LiveKit", url: "https://github.com/livekit/client-sdk-swift.git", .exact("1.0.5")),
+        .package(name: "Sentry", url: "https://github.com/getsentry/sentry-cocoa.git", .exact("7.31.2")),
         
         // Tests
-        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", from: "4.1.0"),
-        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", from: "1.9.0"),
-        .package(url: "https://github.com/venmo/DVR", from: "2.1.0"),
+        .package(url: "https://github.com/MakeAWishFoundation/SwiftyMocky", .exact("4.1.0")),
+        .package(url: "https://github.com/pointfreeco/swift-snapshot-testing", .exact("1.10.0")),
+        .package(url: "https://github.com/venmo/DVR", .exact("2.1.0")),
     ],
     targets: [
         .target(
@@ -47,6 +48,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Apollo", package: "apollo-ios"),
                 .product(name: "ApolloWebSocket", package: "apollo-ios"),
+                .product(name: "Sentry", package: "Sentry"),
             ],
             exclude: [
                 "build.sh",
@@ -62,15 +64,18 @@ let package = Package(
             dependencies: [
                 .target(name: "NablaCore"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
+                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
-            path: "Tests/NablaCoreTestsUtils"
+            path: "Tests/NablaCoreTestsUtils",
+            resources: [
+                .process("Resources"),
+            ]
         ),
         .testTarget(
             name: "NablaCoreTests",
             dependencies: [
                 .target(name: "NablaCore"),
                 .target(name: "NablaCoreTestsUtils"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/PrimaryButton/__Snapshots__"),
@@ -94,6 +99,7 @@ let package = Package(
             name: "NablaMessagingCoreTestsUtils",
             dependencies: [
                 .target(name: "NablaMessagingCore"),
+                .target(name: "NablaCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
             ],
             path: "Tests/NablaMessagingCoreTestsUtils"
@@ -140,7 +146,6 @@ let package = Package(
                 .target(name: "NablaCoreTestsUtils"),
                 .target(name: "NablaMessagingCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/Conversation/__Snapshots__"),
@@ -181,7 +186,6 @@ let package = Package(
                 .target(name: "NablaScheduling"),
                 .target(name: "NablaCoreTestsUtils"),
                 .product(name: "SwiftyMocky", package: "SwiftyMocky"),
-                .product(name: "SnapshotTesting", package: "swift-snapshot-testing"),
             ],
             resources: [
                 .process("SnapshotTests/AppointmentList/__Snapshots__"),

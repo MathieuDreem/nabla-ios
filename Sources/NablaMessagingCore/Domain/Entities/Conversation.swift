@@ -10,7 +10,8 @@ public struct Conversation {
     public let patientUnreadMessageCount: Int
     public let pictureUrl: URL?
     public let providers: [ProviderInConversation]
-    
+    public let isLocked: Bool
+
     public init(
         id: UUID,
         title: String?,
@@ -20,7 +21,8 @@ public struct Conversation {
         lastModified: Date,
         patientUnreadMessageCount: Int,
         pictureUrl: URL?,
-        providers: [ProviderInConversation]
+        providers: [ProviderInConversation],
+        isLocked: Bool
     ) {
         self.id = id
         self.title = title
@@ -31,5 +33,6 @@ public struct Conversation {
         self.patientUnreadMessageCount = patientUnreadMessageCount
         self.pictureUrl = pictureUrl
         self.providers = providers
+        self.isLocked = isLocked
     }
 }
