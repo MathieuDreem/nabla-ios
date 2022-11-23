@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name               = "NablaCore"
-  spec.version            = "1.0.0-alpha20"
+  spec.version            = "1.0.0-alpha24"
   spec.summary            = "#{spec.name} iOS SDK"
 
   spec.description        = <<-DESC
@@ -23,4 +23,5 @@ Pod::Spec.new do |spec|
   spec.resource_bundles   = {"#{spec.name}Resources" => "Sources/#{spec.name}/Resources/**/*"}
 
   spec.dependency           'Apollo/WebSocket', '~> 0.50'
+  spec.dependency           'Sentry', '~> 7.30.1'
 end

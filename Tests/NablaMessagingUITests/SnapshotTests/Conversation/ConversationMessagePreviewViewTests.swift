@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -7,13 +8,14 @@ import XCTest
 // swiftlint:disable force_unwrapping
 
 final class ConversationMessagePreviewViewTests: XCTestCase {
-    private let size = CGSize(width: 320, height: 70)
+    private let size = CGSize(width: 200, height: 42)
     private let provider = Provider.mock(prefix: "Dr", firstName: "John", lastName: "Doe")
     private var sut: ConversationMessagePreviewView!
 
     override func setUp() {
         super.setUp()
-        sut = .init(frame: .zero)
+        sut = ConversationMessagePreviewView()
+        sut.nabla.constraintToSize(size)
     }
 
     func testConfigureReplyToTextMe() {
@@ -36,7 +38,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToImageMe() {
@@ -51,14 +53,14 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .me,
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mock
+                image: .mockWithLocalAsset
             ),
             text: .loremStub
         )
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToVideoMe() {
@@ -80,7 +82,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToDocumentMe() {
@@ -102,7 +104,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToAudioMe() {
@@ -124,7 +126,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToDeletedMe() {
@@ -145,7 +147,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
         // WHEN
         sut.configure(with: ConversationMessagePreviewViewModelTransformer.transform(item: item.replyTo)!, sender: .me(isContiguous: true))
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToTextThem() {
@@ -170,7 +172,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToImageThem() {
@@ -185,7 +187,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
                 sender: .provider(provider),
                 sendingState: .sent,
                 replyTo: nil,
-                image: .mock
+                image: .mockWithLocalAsset
             ),
             text: .loremStub
         )
@@ -195,7 +197,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToDocumentThem() {
@@ -220,7 +222,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
     func testTextConfigureReplyToAudioThem() {
@@ -245,7 +247,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToDeletedThem() {
@@ -269,7 +271,7 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureReplyToVideoThem() {
@@ -294,6 +296,6 @@ final class ConversationMessagePreviewViewTests: XCTestCase {
             sender: ConversationMessageSenderTransformer.transform(item: item)
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 }

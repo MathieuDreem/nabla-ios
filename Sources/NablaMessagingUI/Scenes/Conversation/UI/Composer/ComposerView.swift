@@ -52,7 +52,7 @@ final class ComposerView: UIView {
         logger = dependencies.logger
 
         super.init(frame: .zero)
-
+        updateAppearance()
         backgroundColor = NablaTheme.Conversation.composerBackgroundColor
         addSubview(vStack)
         vStack.nabla.pinToSuperView()
@@ -67,6 +67,11 @@ final class ComposerView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         textView.isScrollEnabled = hasReachedMaximumHeight
+    }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateAppearance()
     }
 
     // MARK: - Public
@@ -138,7 +143,7 @@ final class ComposerView: UIView {
         stackView.axis = .vertical
         stackView.layer.cornerRadius = Constants.textViewMinHeight / 2
         stackView.layer.borderWidth = 1
-        stackView.layer.borderColor = NablaTheme.Conversation.composerButtonTintColor.cgColor
+        // borderColor managed in `updateAppearance`
         return stackView
     }()
     
@@ -168,7 +173,7 @@ final class ComposerView: UIView {
         view.setTintColor(NablaTheme.Conversation.composerButtonTintColor, for: .disabled)
         view.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         view.isEnabled = false
-        view.nabla.constraintWidth(36)
+        view.nabla.constraintWidth(44)
         NSLayoutConstraint.activate([
             view.heightAnchor.constraint(equalTo: view.widthAnchor).nabla.with(priority: .fittingSizeLevel),
         ])
@@ -235,6 +240,10 @@ final class ComposerView: UIView {
             updateAudioRecordingVisibility()
             sendButton.isEnabled = enableSendButton
         }
+    }
+    
+    private func updateAppearance() {
+        borderedContainerView.layer.borderColor = NablaTheme.Conversation.composerBorderColor.cgColor
     }
     
     private func updateMediaComposerVisibility() {

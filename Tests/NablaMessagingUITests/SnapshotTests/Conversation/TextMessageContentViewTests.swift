@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -26,7 +27,7 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
     func testTextConfigureMeContiguous() {
@@ -42,15 +43,15 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
-    func testTextConfigureThemContiguous() {
+    func testTextConfigureProviderContiguous() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .loremStub),
@@ -58,15 +59,15 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
-    func testTextConfigureThem() {
+    func testTextConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: true)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .loremStub),
@@ -74,7 +75,39 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testTextConfigureOtherContiguous() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .loremStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+
+    func testTextConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: true)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .loremStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTextConfigureMeWithLink() {
@@ -90,15 +123,15 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
-    func testTextConfigureThemWithLink() {
+    func testTextConfigureProviderWithLink() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: .textWithLinksStub),
@@ -106,7 +139,23 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
+    }
+    
+    func testTextConfigureOtherWithLink() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithLinksStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureMeWithPhoneNumber() {
@@ -122,15 +171,15 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
-    func testTextConfigureThemWithPhoneNumber() {
+    func testTextConfigureProviderWithPhoneNumber() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(
+                sender: .provider(
                     .init(
                         author: .authorStub,
                         avatar: .init(url: nil, text: .initialsStub),
@@ -144,7 +193,29 @@ final class TextMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 1, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
+    }
+    
+    func testTextConfigureOtherWithPhoneNumber() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(
+                    .init(
+                        author: .otherAuthorStub,
+                        avatar: .init(url: nil, text: .otherInitialsStub),
+                        isContiguous: false
+                    )
+                ),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: .textWithPhoneNumbersStub),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 1, size: size))
     }
     
     func testTextConfigureMeInResponseToMessageWithLongerOriginal() {
@@ -157,15 +228,15 @@ final class TextMessageContentViewTests: XCTestCase {
                 replyTo: .init(
                     icon: nil,
                     author: .authorStub,
-                    preview: "Text much longer than the response",
-                    previewImage: nil
+                    text: "Text much longer than the response",
+                    image: nil
                 ),
                 content: .init(text: "Sure"),
                 menuElements: []
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testTextConfigureMeInResponseToMessageWithLongerMessage() {
@@ -178,14 +249,14 @@ final class TextMessageContentViewTests: XCTestCase {
                 replyTo: .init(
                     icon: nil,
                     author: .authorStub,
-                    preview: "What?",
-                    previewImage: nil
+                    text: "What?",
+                    image: nil
                 ),
                 content: .init(text: "Text much longer than the original message and ignoring the question"),
                 menuElements: []
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

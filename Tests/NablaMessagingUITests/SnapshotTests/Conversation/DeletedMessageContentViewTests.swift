@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -25,15 +26,15 @@ final class DeletedMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
-    func testDeletedConfigureThem() {
+    func testDeletedConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(text: "Deleted Message"),
@@ -41,6 +42,22 @@ final class DeletedMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testDeletedConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(text: "Deleted Message"),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

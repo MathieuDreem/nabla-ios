@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -25,15 +26,15 @@ final class ImageMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 
-    func testImageConfigureThem() {
+    func testImageConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(originalImageSize: .init(width: 200, height: 200), imageSource: .url(.stubImage)),
@@ -41,6 +42,22 @@ final class ImageMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .wait(for: 0.5, on: .image(size: size)))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
+    }
+    
+    func testImageConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(originalImageSize: .init(width: 200, height: 200), imageSource: .url(.stubImage)),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(wait: 0.5, size: size))
     }
 }

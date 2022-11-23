@@ -8,6 +8,10 @@ public extension String {
     static var urlStubVideo: Self {
         "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
     }
+    
+    static var urlStubInvalidVideo: Self {
+        "http://this.video.does.not.exist/video.mp4"
+    }
 
     static var filenameStub: Self {
         "Document.pdf"
@@ -16,9 +20,17 @@ public extension String {
     static var initialsStub: Self {
         "JD"
     }
+    
+    static var otherInitialsStub: Self {
+        "PB"
+    }
 
     static var authorStub: Self {
         "Dr John Doe"
+    }
+    
+    static var otherAuthorStub: Self {
+        "Patient B"
     }
 
     static var loremStub: Self {

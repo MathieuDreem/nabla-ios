@@ -23,7 +23,7 @@ protocol ConversationMessagePresenter: Presenter {
 
 final class ConversationMessageCell<ContentView: MessageContentView>: UICollectionViewCell, ConversationMessageCellContract, Reusable, UIGestureRecognizerDelegate {
     // MARK: Lifecycle
-    
+
     override func didMoveToSuperview() {
         super.didMoveToSuperview()
         setUp()
@@ -69,7 +69,8 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
     private let rightSpacer = UISpacerView(axis: .horizontal)
     private let topSpacer = UISpacerView(axis: .vertical, size: .fixed(value: 8), color: .clear)
     private let feedbackGenerator = UINotificationFeedbackGenerator()
-    
+
+    private var containerStackView: UIStackView?
     private lazy var authorLabel: UILabel = makeAuthorLabel()
     private lazy var header: UIView = makeHeader()
     private lazy var avatarContainerView: UIView = makeAvatarContainerView()
@@ -113,13 +114,24 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             } else {
                 setVisibleViews([topSpacer, leftSpacer])
             }
-        case let .them(themViewModel):
+        case let .provider(providerViewModel):
             footerLabel.textAlignment = .left
-            avatarView.avatar = themViewModel.avatar
-            authorLabel.text = themViewModel.author
+            avatarView.avatar = providerViewModel.avatar
+            authorLabel.text = providerViewModel.author
             container.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
 
-            if themViewModel.isContiguous {
+            if providerViewModel.isContiguous {
+                setVisibleViews([rightSpacer])
+            } else {
+                setVisibleViews([topSpacer, header, avatarView, rightSpacer])
+            }
+        case let .other(otherViewModel):
+            footerLabel.textAlignment = .left
+            avatarView.avatar = otherViewModel.avatar
+            authorLabel.text = otherViewModel.author
+            container.backgroundColor = NablaTheme.Conversation.messageOtherBackgroundColor
+
+            if otherViewModel.isContiguous {
                 setVisibleViews([rightSpacer])
             } else {
                 setVisibleViews([topSpacer, header, avatarView, rightSpacer])
@@ -146,11 +158,14 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     private func configure(with replyTo: ConversationMessagePreviewViewModel?, sender: ConversationMessageSender) {
         guard let replyTo = replyTo else {
-            messagePreviewView.isHidden = true
+            messagePreviewView.removeFromSuperview()
             return
         }
 
-        messagePreviewView.isHidden = false
+        if let contains = containerStackView?.arrangedSubviews.contains(messagePreviewView), !contains {
+            containerStackView?.insertArrangedSubview(messagePreviewView, at: 0)
+        }
+
         messagePreviewView.configure(with: replyTo, sender: sender)
     }
     
@@ -159,11 +174,13 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         view.clipsToBounds = true
 
-        let stackView = UIStackView(arrangedSubviews: [messagePreviewView, content])
-        stackView.axis = .vertical
-
-        view.addSubview(stackView)
-        stackView.nabla.pinToSuperView()
+        containerStackView = {
+            let stackView = UIStackView(arrangedSubviews: [content])
+            stackView.axis = .vertical
+            view.addSubview(stackView)
+            stackView.nabla.pinToSuperView()
+            return stackView
+        }()
         content.addGestureRecognizer(contentTapGestureRecognizer)
         content.nabla.constraintWidth(Constants.bodyMaxWidth, relation: .lessThanOrEqual)
         return view
@@ -253,7 +270,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
 
     private func makeReplyView() -> UIView {
         let view = UIView()
-        view.backgroundColor = NablaTheme.secondaryBackgroundColor
+        view.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
         view.nabla.constraintToSize(.init(width: 32, height: 32))
         view.layer.cornerRadius = 16
         view.clipsToBounds = true
@@ -262,7 +279,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "arrowshape.turn.up.left.fill")
         imageView.nabla.constraintToSize(.init(width: 17, height: 14))
-        imageView.tintColor = NablaTheme.primaryTextColor
+        imageView.tintColor = NablaTheme.Conversation.textMessageProviderTextColor
         view.addSubview(imageView)
         imageView.nabla.constraintToCenterInSuperView()
 

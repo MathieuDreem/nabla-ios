@@ -18,7 +18,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         authorLabel.text = viewModel.sender
         previewLabel.text = viewModel.preview
         // Here
-        previewImageView.imageSource = viewModel.imagePreview
+        previewImageView.source = viewModel.imagePreview
 
         previewImageView.isHidden = viewModel.imagePreview == nil
     }
@@ -62,7 +62,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
     private func makeBorder() -> UIView {
         let view = UIView()
         view.nabla.constraintHeight(1)
-        view.backgroundColor = NablaTheme.accessoryColor
+        view.backgroundColor = NablaTheme.Conversation.composerReplyToBorderColor
         return view
     }
 

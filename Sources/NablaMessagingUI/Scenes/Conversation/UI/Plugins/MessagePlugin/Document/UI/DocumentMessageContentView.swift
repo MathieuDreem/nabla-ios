@@ -25,8 +25,8 @@ class DocumentMessageContentView: UIView, MessageContentView {
     // MARK: - MessageContentView
     
     func configure(with viewModel: DocumentMessageContentViewModel) {
-        if let mediaSource = viewModel.url.map(MediaSource.url) {
-            imageView.imageSource = mediaSource
+        if let thumbnail = viewModel.thumbnail {
+            imageView.source = thumbnail
         } else {
             imageView.image = CoreAssets.Assets.documentPlaceholder.image
         }
@@ -38,14 +38,17 @@ class DocumentMessageContentView: UIView, MessageContentView {
         case .me:
             label.textColor = NablaTheme.Conversation.documentMessagePatientTitleColor
             iconImageView.tintColor = NablaTheme.Conversation.documentMessagePatientTitleColor
-        case .them:
+        case .provider:
             label.textColor = NablaTheme.Conversation.documentMessageProviderTitleColor
             iconImageView.tintColor = NablaTheme.Conversation.documentMessageProviderTitleColor
+        case .other:
+            label.textColor = NablaTheme.Conversation.documentMessageOtherTitleColor
+            iconImageView.tintColor = NablaTheme.Conversation.documentMessageOtherTitleColor
         }
     }
     
     func prepareForReuse() {
-        imageView.imageSource = nil
+        imageView.source = nil
         label.text = nil
     }
     

@@ -11,21 +11,17 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     weak var delegate: ConversationViewControllerDelegate?
 
     init(
-        showComposer: Bool,
         logger: Logger,
         videoCallClient: VideoCallClient?,
         providers: [ConversationCellProvider],
         delegate: ConversationViewControllerDelegate?
     ) {
-        self.showComposer = showComposer
         self.logger = logger
         self.providers = providers
         self.videoCallClient = videoCallClient
         self.delegate = delegate
         super.init(nibName: nil, bundle: nil)
-        navigationItem.titleView = navigationItem.titleView ?? titleView
-        navigationItem.largeTitleDisplayMode = .never
-        hidesBottomBarWhenPushed = true
+        initialize()
     }
 
     @available(*, unavailable)
@@ -37,12 +33,32 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = NablaTheme.Conversation.backgroundColor
-        collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
-        collectionView.delegate = self
-        providers.forEach { $0.prepare(collectionView: collectionView) }
-        errorView.delegate = self
+        setUp()
         presenter.start()
+    }
+    
+    private func initialize() {
+        hidesBottomBarWhenPushed = true
+        
+        navigationItem.titleView = navigationItem.titleView ?? titleView
+        navigationItem.largeTitleDisplayMode = .never
+        
+        // Use the default appearance background
+        // But enforce using `configureWithOpaqueBackground` because the navbar is not able to detect the correct scroll position of `FlippedCollectionView`
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithDefaultBackground()
+        let backgroundEffect = appearance.backgroundEffect
+        let backgroundColor = appearance.backgroundColor
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundEffect = backgroundEffect
+        appearance.backgroundColor = backgroundColor
+        navigationItem.compactAppearance = appearance
+        navigationItem.standardAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+    }
+    
+    private func setUp() {
+        view.backgroundColor = NablaTheme.Conversation.backgroundColor
     }
 
     // MARK: - Internal
@@ -122,7 +138,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     func scrollToItem(withId id: UUID) {
         guard
-            case let .loaded(items) = state,
+            case let .loaded(items, _) = state,
             let item = items.first(where: { $0.id == id }),
             let indexPath = dataSource.indexPath(for: DiffableConversationViewItem(value: item)) else {
             return
@@ -140,7 +156,6 @@ final class ConversationViewController: UIViewController, ConversationViewContra
 
     private typealias DataSource = UICollectionViewDiffableDataSource<Section, DiffableConversationViewItem>
 
-    private let showComposer: Bool
     private let logger: Logger
     private let providers: [ConversationCellProvider]
     private let videoCallClient: VideoCallClient?
@@ -157,9 +172,14 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private let loadingView: LoadingView = .init()
     
-    private let errorView: ErrorView = .init()
+    private lazy var errorView: ErrorView = {
+        let view = ErrorView()
+        view.delegate = self
+        return view
+    }()
     
     private let loadedView: UIView = .init()
+    private var loadedViewBottomConstraint: NSLayoutConstraint?
 
     private lazy var collectionView: UICollectionView = makeCollectionView()
     private lazy var composerView: ComposerView = makeComposerView()
@@ -193,6 +213,8 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let collectionView = FlippedCollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.keyboardDismissMode = .interactive
         collectionView.delegate = self
+        collectionView.backgroundColor = NablaTheme.Conversation.backgroundColor
+        providers.forEach { $0.prepare(collectionView: collectionView) }
         return collectionView
     }
     
@@ -212,6 +234,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
                 collectionView: collectionView,
                 indexPath: indexPath,
                 item: item,
+                viewController: self,
                 delegate: self
             ) {
                 return cell
@@ -228,15 +251,17 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     // - Loaded -> collectionView + composerView
     private func updateLayoutAfterStateChange(oldValue: ConversationViewState) {
         switch (state, oldValue) {
-        case let (.loaded(items), .loaded(previousItems)):
+        case let (.loaded(items, showComposer), .loaded(previousItems, _)):
             applySnapshot(items: items, animatingDifferences: !previousItems.isEmpty)
+            updateComposerVisibility(showComposer: showComposer)
         case (.loading, _):
             switchToLoadingLayout()
             loadingView.startAnimating()
         case let (.error(viewModel), _):
             switchToErrorLayout(viewModel: viewModel)
-        case let (.loaded(items), _):
+        case let (.loaded(items, showComposer), _):
             switchToLoadedLayout(with: collectionView)
+            updateComposerVisibility(showComposer: showComposer)
             applySnapshot(items: items)
         }
     }
@@ -256,22 +281,12 @@ final class ConversationViewController: UIViewController, ConversationViewContra
     
     private func switchToLoadedLayout(with containedView: UIView) {
         view.nabla.removeSubviews()
-        if showComposer {
-            view.addSubview(composerView)
-            composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
-        }
         view.addSubview(loadedView)
         loadedView.addSubview(containedView)
         loadedView.nabla.pinToSuperView(edges: .nabla.horizontal)
         containedView.nabla.pinToSuperView()
 
         loadedView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        if showComposer {
-            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
-            composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor).isActive = true
-        } else {
-            loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        }
     }
     
     private func switchLoadedLayout(from fromView: UIView, to toView: UIView) {
@@ -327,11 +342,11 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             })
         )
         if Bundle.main.nabla.hasCameraUsageDescription {
-            let scanDosumentAction = UIAlertAction(title: L10n.conversationAddMediaScanDocument, style: .default, handler: { [weak self] _ in
+            let scanDocumentAction = UIAlertAction(title: L10n.conversationAddMediaScanDocument, style: .default, handler: { [weak self] _ in
                 self?.presenter?.didTapScanDocumentButton()
             })
-            scanDosumentAction.isEnabled = !UIDevice.current.nabla.isSimulator
-            alert.addAction(scanDosumentAction)
+            scanDocumentAction.isEnabled = !UIDevice.current.nabla.isSimulator
+            alert.addAction(scanDocumentAction)
         }
         if #available(iOS 14, *) {
             alert.addAction(
@@ -346,6 +361,22 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         alert.popoverPresentationController?.sourceRect = sourceView.frame
         alert.popoverPresentationController?.permittedArrowDirections = [.down]
         present(alert, animated: true, completion: nil)
+    }
+
+    private func updateComposerVisibility(showComposer: Bool) {
+        loadedViewBottomConstraint?.isActive = false
+        if showComposer {
+            view.addSubview(composerView)
+            composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
+
+            loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
+            loadedViewBottomConstraint = composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+            loadedViewBottomConstraint?.isActive = true
+        } else {
+            composerView.removeFromSuperview()
+            loadedViewBottomConstraint = loadedView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            loadedViewBottomConstraint?.isActive = true
+        }
     }
 }
 

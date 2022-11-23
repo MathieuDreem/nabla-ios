@@ -4,9 +4,14 @@ import UIKit
 class ConversationMessagePreviewView: UIView {
     // MARK: - Lifecycle
 
-    override func didMoveToSuperview() {
-        super.didMoveToSuperview()
+    init() {
+        super.init(frame: .zero)
         setUp()
+    }
+
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     // MARK: - Public
@@ -15,12 +20,11 @@ class ConversationMessagePreviewView: UIView {
                    sender: ConversationMessageSender) {
         iconImageView.image = viewModel.icon
         authorLabel.text = viewModel.author
-        previewLabel.text = viewModel.preview
-        // Here
-        previewImageView.imageSource = viewModel.previewImage
+        previewLabel.text = viewModel.text
+        previewImageView.source = viewModel.image
 
         iconImageViewContainer.isHidden = viewModel.icon == nil
-        previewImageView.isHidden = viewModel.previewImage == nil
+        previewImageView.isHidden = viewModel.image == nil
 
         switch sender {
         case .me:
@@ -28,11 +32,16 @@ class ConversationMessagePreviewView: UIView {
             iconImageView.tintColor = NablaTheme.Conversation.replyToPatientPreviewColor
             authorLabel.textColor = NablaTheme.Conversation.replyToPatientPreviewColor
             previewLabel.textColor = NablaTheme.Conversation.replyToPatientPreviewColor
-        case .them:
+        case .provider:
             separatorView.backgroundColor = NablaTheme.Conversation.replyToProviderSeparatorColor
             iconImageView.tintColor = NablaTheme.Conversation.replyToProviderPreviewColor
             authorLabel.textColor = NablaTheme.Conversation.replyToProviderPreviewColor
             previewLabel.textColor = NablaTheme.Conversation.replyToProviderPreviewColor
+        case .other:
+            separatorView.backgroundColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            iconImageView.tintColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            authorLabel.textColor = NablaTheme.Conversation.replyToOtherSeparatorColor
+            previewLabel.textColor = NablaTheme.Conversation.replyToOtherSeparatorColor
         }
     }
 

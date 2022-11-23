@@ -2,15 +2,9 @@ import Foundation
 import NablaCore
 import UIKit
 
-private enum Constants {
-    static let defaultSize = CGSize(width: 172, height: 172)
-    static let maxWidth: CGFloat = 288
-    static let maxHeight: CGFloat = 288
-}
-
 final class ImageMessageContentView: UIView, MessageContentView {
     // MARK: - Init
-    
+
     init() {
         super.init(frame: .zero)
         addSubview(imageView)
@@ -26,18 +20,23 @@ final class ImageMessageContentView: UIView, MessageContentView {
     
     func configure(with viewModel: ImageMessageContentViewModel) {
         // Here
-        imageView.imageSource = viewModel.imageSource
+        imageView.source = viewModel.imageSource
 
-        nabla.constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
+        widthConstraint?.isActive = false
+        heightConstraint?.isActive = false
+        (widthConstraint, heightConstraint) = nabla.constraintToSize(idealSize(contentSize: viewModel.originalImageSize))
     }
     
     func configure(sender _: ConversationMessageSender) {}
     
     func prepareForReuse() {
-        imageView.imageSource = nil
+        imageView.source = nil
     }
     
     // MARK: - Private
+
+    private var widthConstraint: NSLayoutConstraint?
+    private var heightConstraint: NSLayoutConstraint?
     
     private lazy var imageView: NablaViews.ImageView = {
         let imageView = NablaViews.ImageView()

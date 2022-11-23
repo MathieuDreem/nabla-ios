@@ -67,7 +67,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
 
     func didReplyToMessage(withId id: UUID) {
         guard
-            case let .loaded(items) = state,
+            case let .loaded(items, _) = state,
             let item = items.first(where: { $0.id == id }),
             let message = item as? ConversationViewMessageItem else {
             return
@@ -283,16 +283,10 @@ final class ConversationPresenterImpl: ConversationPresenter {
     }
     
     private static func transform(conversation: Conversation) -> ConversationViewModel {
-        let provider = conversation.providers.first?.provider
-        return ConversationViewModel(
+        ConversationViewModel(
             title: conversation.title ?? conversation.inboxPreviewTitle,
             subtitle: conversation.subtitle,
-            avatar: AvatarViewModel(
-                url: provider?.avatarURL,
-                text: provider.flatMap {
-                    ProviderNameComponentsFormatter(style: .initials).string(from: .init($0)).nabla.nilIfEmpty
-                }
-            )
+            avatar: AvatarViewModelTransformer.avatar(for: conversation)
         )
     }
     
@@ -302,7 +296,7 @@ final class ConversationPresenterImpl: ConversationPresenter {
             providers: conversation?.providers ?? [],
             focusedTextItemId: focusedPatientTextItemId
         )
-        state = .loaded(items: items)
+        state = .loaded(items: items, showComposer: !(conversation?.isLocked ?? false))
     }
 
     private func refreshItems() {

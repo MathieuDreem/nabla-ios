@@ -8,20 +8,82 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Added an empty state when the conversation list is empty. You can customize this text appearance using `Theme.ConversationPreview.EmptyView` attributes.
+
+### Changed
+
+- Added a "play" indicator on videos on iOS 16 since the default one has been removed by the system update.
+
+### Fixed
+
+- Fixed an infinite loop that could happen when `SessionTokenProvider` was returning badly formatted tokens.
+- Fixed a layout issue in the conversation screen that happens when a conversation is unlocked while displayed on screen. 
+
+
+## [1.0.0-alpha24] - 2022-11-17
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Fixed NablaTheme.Colors being immutable.
+
+
+## [1.0.0-alpha23] - 2022-11-16
+
+### Added
+
+- Reporting: Add an ErrorReporter to report anonymous events to nabla servers to help debug some features like video calls.
+
+### Changed
+
+- Removed the `showComposer` parameter from `createConversationViewController` method and relied on `Conversation` `isLocked` property to hide the composer.  
+⚠️ If you were using the `showComposer` parameter of `NablaClient.shared.messaging.views.createConversationViewController`, it is not available anymore and you should migrate to using lock conversation from the Console.
+
+### Fixed
+ 
+- Fixed an issue in video calls where the Provider's video could sometime not be displayed.
+
+## [1.0.0-alpha22] - 2022-11-14
+
+### Added
+- Support for dynamic consents in Scheduling module that you can customize from the console.
+
+### Changed
+- The `NablaClient.initialize` method now takes a `Configuration` struct instead of multiple params.
+⚠️ This change is breaking and you will need to update all `NablaClient` `initialize` and `init` calls.
+
+- `NablaTheme` colors have been reworked to better support dark mode. The new colors can be found in `NablaTheme.Colors`.
+- `NablaTheme` fonts have been reworked for better consistency. The new fonts can be found in `NablaTheme.Fonts`.
+
+To know more about `NablaTheme`, please visit our documentation: https://docs.nabla.com/docs/theming-ios
+
+### Fixed
+
+
+## [1.0.0-alpha21] - 2022-11-03
+
+### Added
+
 - Added the option to scan a document in conversation screen.
 - Added missing NablaTheme properties to customize the video calls action requests in MessagingUI.
 - Introduced `ConversationViewControllerDelegate` to control taps on the conversation screen's title view.
+- A new `ConversationMessageSender.patient(Patient)` was introduced for conversations with multiple patients.
+- New attributes (`messageOtherBackgroundColor`, `textMessageOtherTextColor`, `documentMessageOtherTitleColor`, `audioMessageOtherTitleColor`, `replyToOtherSeparatorColor`) have been added to customize how other patient and system messages appear in the conversation on our Messaging UI module.
 
 ### Changed
  
 - Updated the cell layout for ended video calls action requests in MessagingUI.
 - `ConversationMessageSender.patient` was renamed to `ConversationMessageSender.me`.
-- A new `ConversationMessageSender.patient(Patient)` was introduced for conversations with multiple patients.
-
 - Improved the appearance of the "send message" button.
 
 ### Fixed
 
+- Fix an issue that could lead to messages having the wrong size in the conversation screen of the Messaging UI module
+- Fix an issue where the spinner when loading more messages in the conversation screen of the Messagging UI module would not be at the correct position
+- Remove any color under the avatar picture of a Provider in case the picture has transparency
 
 ## [1.0.0-alpha20] - 2022-10-18
 

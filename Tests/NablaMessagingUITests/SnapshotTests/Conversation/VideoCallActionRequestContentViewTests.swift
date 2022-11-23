@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -26,15 +27,15 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
-    func testConfigureThemWaiting() {
+    func testConfigureProviderWaiting() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(state: .waiting),
@@ -42,7 +43,23 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testConfigureOtherWaiting() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(state: .waiting),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testConfigureMeOpened() {
@@ -58,15 +75,15 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
-    func testConfigureThemOpened() {
+    func testConfigureProviderOpened() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(state: .opened),
@@ -74,7 +91,23 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testConfigureOtherOpened() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(state: .opened),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
     func testConfigureMeClosed() {
@@ -90,15 +123,15 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
     
-    func testConfigureThemClosed() {
+    func testConfigureProviderClosed() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(state: .closed),
@@ -106,6 +139,22 @@ final class VideoCallActionRequestContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testConfigureOtherClosed() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(state: .closed),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

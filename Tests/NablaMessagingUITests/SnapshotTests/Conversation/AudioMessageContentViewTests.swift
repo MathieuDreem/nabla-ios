@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 import NablaMessagingCore
 @testable import NablaMessagingUI
 import SnapshotTesting
@@ -25,15 +26,15 @@ final class AudioMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 
-    func testAudioConfigureThem() {
+    func testAudioConfigureProvider() {
         // GIVEN
         // WHEN
         sut.configure(
             with: .init(
-                sender: .them(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
+                sender: .provider(.init(author: .authorStub, avatar: .init(url: nil, text: .initialsStub), isContiguous: false)),
                 footer: nil,
                 replyTo: nil,
                 content: .init(isPlayling: false, duration: "00:07"),
@@ -41,6 +42,22 @@ final class AudioMessageContentViewTests: XCTestCase {
             )
         )
         // THEN
-        assertSnapshot(matching: sut, as: .image(size: size))
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
+    }
+    
+    func testAudioConfigureOther() {
+        // GIVEN
+        // WHEN
+        sut.configure(
+            with: .init(
+                sender: .other(.init(author: .otherAuthorStub, avatar: .init(url: nil, text: .otherInitialsStub), isContiguous: false)),
+                footer: nil,
+                replyTo: nil,
+                content: .init(isPlayling: false, duration: "00:07"),
+                menuElements: []
+            )
+        )
+        // THEN
+        assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size))
     }
 }

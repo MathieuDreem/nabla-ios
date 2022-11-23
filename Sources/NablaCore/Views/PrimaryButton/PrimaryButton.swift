@@ -1,16 +1,11 @@
 import UIKit
 
 public extension NablaViews {
-    final class PrimaryButton: UIControl {
+    final class PrimaryButton: UIButton {
         // MARK: - Public
         
-        public var theme: Theme = NablaTheme.primaryButton {
+        public var theme: Theme = NablaTheme.Button.accent {
             didSet { updateAppearance() }
-        }
-        
-        public var title: String? {
-            get { titleLabel.text }
-            set { titleLabel.text = newValue }
         }
         
         public var onTap: (() -> Void)?
@@ -43,14 +38,9 @@ public extension NablaViews {
         
         // MARK: - Private
         
-        // MARK: Subviews
+        private var backgroundAlreadySet = false
         
-        private lazy var titleLabel: UILabel = {
-            let view = UILabel()
-            view.numberOfLines = 1
-            view.textAlignment = .center
-            return view
-        }()
+        // MARK: Subviews
         
         private lazy var loadingIndicator: UIActivityIndicatorView = {
             let view = UIActivityIndicatorView()
@@ -60,40 +50,47 @@ public extension NablaViews {
         
         private func setUp() {
             layer.cornerRadius = 8
-            nabla.constraintHeight(52)
             
-            addSubview(titleLabel)
-            titleLabel.nabla.constraintToCenterInSuperView()
-            titleLabel.nabla.pinToSuperView(edges: .nabla.horizontal, insets: .nabla.horizontal(16))
+            contentEdgeInsets = .nabla.all(16)
             
             addSubview(loadingIndicator)
             loadingIndicator.nabla.constraintToCenterInSuperView()
-            
+                        
             addTarget(self, action: #selector(tapHandler), for: .touchUpInside)
         }
         
         private func updateAppearance() {
-            backgroundColor = theme.backgroundColor
-            titleLabel.textColor = theme.textColor
-            titleLabel.font = theme.font
+            titleLabel?.font = theme.font
             loadingIndicator.color = theme.textColor
+            setTitleColor(theme.textColor, for: .normal)
+            setTitleColor(theme.highlightedTextColor, for: .highlighted)
+            setTitleColor(theme.disabledTextColor, for: .disabled)
             
             if isLoading {
                 loadingIndicator.startAnimating()
-                titleLabel.isHidden = true
+                titleLabel?.alpha = 0
             } else {
                 loadingIndicator.stopAnimating()
-                titleLabel.isHidden = false
+                titleLabel?.alpha = 1
             }
             
-            UIView.animate(withDuration: 0.2) { [self] in
-                if state.contains(.disabled) {
-                    backgroundColor = theme.disabledBackgroundColor
-                } else if state.contains(.highlighted) {
-                    backgroundColor = theme.highlightedBackgroundColor
-                
+            let targetBackgroundColor: UIColor
+            if state.contains(.disabled) {
+                targetBackgroundColor = theme.disabledBackgroundColor
+            } else if state.contains(.highlighted) {
+                targetBackgroundColor = theme.highlightedBackgroundColor
+            } else {
+                targetBackgroundColor = theme.backgroundColor
+            }
+            
+            if targetBackgroundColor != backgroundColor {
+                if backgroundAlreadySet { // Animate only after the first background color change
+                    UIView.animate(withDuration: 0.2) { [self] in
+                        backgroundColor = targetBackgroundColor
+                    }
                 } else {
-                    backgroundColor = theme.backgroundColor
+                    backgroundAlreadySet = true
+                    backgroundColor = targetBackgroundColor
                 }
             }
         }

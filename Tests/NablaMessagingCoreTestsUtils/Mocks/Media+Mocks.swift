@@ -1,9 +1,11 @@
 import Foundation
+import NablaCoreTestsUtils
 import NablaMessagingCore
+import UIKit
 
 public extension ImageFile {
-    static var mock: Self {
-        .init(fileName: .filenameStub, content: .url(.stubImage), size: .init(width: 200, height: 200), mimeType: .jpg)
+    static var mockWithLocalAsset: Self {
+        .init(fileName: .filenameStub, source: .stubLocalImage, size: .init(width: 200, height: 200), mimeType: .jpg)
     }
 }
 
@@ -15,7 +17,7 @@ public extension AudioFile {
 
 public extension DocumentFile {
     static var mock: Self {
-        .init(fileName: .filenameStub, content: .url(.stubImage), thumbnailUrl: .stubImage, mimeType: .pdf)
+        .init(fileName: .filenameStub, content: .data(.stubImage), thumbnail: .stubLocalImage, mimeType: .pdf)
     }
 }
 

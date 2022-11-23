@@ -59,8 +59,6 @@ public extension NablaViews {
         }
         
         private func setUp() {
-            backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
-            
             addSubview(imageAvatarView)
             imageAvatarView.nabla.pinToSuperView()
             
@@ -79,8 +77,10 @@ public extension NablaViews {
         }
         
         private func configure(with viewModel: AvatarViewModel) {
+            backgroundColor = NablaTheme.Shared.avatarViewBackgroundColor
             if let url = URL(string: viewModel.url) {
-                imageAvatarView.imageSource = .url(url)
+                backgroundColor = .clear
+                imageAvatarView.source = .url(url)
                 setVisible(subview: imageAvatarView)
             } else if let text = viewModel.text {
                 initialsAvatarView.text = text

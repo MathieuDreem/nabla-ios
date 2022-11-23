@@ -4,7 +4,7 @@ public extension NablaViews {
     final class CheckboxView: UIView {
         // MARK: - Public
         
-        public var theme: Theme = .init() {
+        public var theme: Theme = NablaTheme.Checkbox.base {
             didSet { updateAppearance() }
         }
         
@@ -35,6 +35,11 @@ public extension NablaViews {
             backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
         }
         
+        override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            updateAppearance()
+        }
+        
         // MARK: Subviews
         
         private lazy var imageView: UIImageView = {
@@ -61,11 +66,11 @@ public extension NablaViews {
         private func updateAppearance() {
             if isChecked {
                 backgroundView.layer.borderColor = theme.checked.borderColor.cgColor
-                backgroundView.backgroundColor = theme.checked.fillcolor
+                backgroundView.backgroundColor = theme.checked.fillColor
                 imageView.isHidden = false
             } else {
                 backgroundView.layer.borderColor = theme.unchecked.borderColor.cgColor
-                backgroundView.backgroundColor = theme.unchecked.fillcolor
+                backgroundView.backgroundColor = theme.unchecked.fillColor
                 imageView.isHidden = true
             }
         }

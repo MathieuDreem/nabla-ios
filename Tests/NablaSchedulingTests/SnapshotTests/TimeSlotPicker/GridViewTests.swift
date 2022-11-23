@@ -1,3 +1,4 @@
+import NablaCoreTestsUtils
 @testable import NablaScheduling
 import SnapshotTesting
 import XCTest
@@ -34,7 +35,7 @@ class GridViewTests: XCTestCase {
             // WHEN
             sut.items = (0 ... count).map { colors[$0 % colors.count] }
             // THEN
-            assertSnapshot(matching: sut, as: .image(size: size))
+            assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size), testName: "\(#function).\(count)")
         }
         
         // Always allocates complete rows. Must be equal ot multiple of column.
@@ -47,7 +48,7 @@ class GridViewTests: XCTestCase {
             // WHEN
             sut.items = (0 ... count).map { colors[$0 % colors.count] }
             // THEN
-            assertSnapshot(matching: sut, as: .image(size: size))
+            assertSnapshots(matching: sut, as: .lightAndDarkImages(size: size), testName: "\(#function).\(count)")
         }
         
         // Always allocates complete rows. Must be equal ot multiple of column.

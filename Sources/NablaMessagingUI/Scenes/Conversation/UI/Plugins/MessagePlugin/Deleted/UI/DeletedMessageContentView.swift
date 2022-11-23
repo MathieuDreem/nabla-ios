@@ -7,9 +7,11 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     
     init() {
         super.init(frame: .zero)
+        backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
+        updateAppearance()
         
         addSubview(borderedContainer)
-        borderedContainer.nabla.pinToSuperView()
+        borderedContainer.nabla.pinToSuperView(insets: .nabla.all(1))
         
         borderedContainer.addSubview(label)
         label.nabla.pinToSuperView(insets: .nabla.make(horizontal: 16, vertical: 8))
@@ -32,6 +34,13 @@ final class DeletedMessageContentView: UIView, MessageContentView {
         label.text = nil
     }
     
+    // MARK: Life cycle
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateAppearance()
+    }
+    
     // MARK: - Private
     
     private lazy var label: UILabel = {
@@ -45,11 +54,14 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     
     private lazy var borderedContainer: UIView = {
         let view = UIView()
-        view.backgroundColor = NablaTheme.Conversation.deletedMessageBackgroundColor
-        view.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
+        // `borderColor` managed in `updateAppearance()`
         view.layer.borderWidth = 0.5
         view.layer.cornerRadius = NablaTheme.Conversation.messageCornerRadius
         return view
         
     }()
+    
+    private func updateAppearance() {
+        borderedContainer.layer.borderColor = NablaTheme.Conversation.deletedMessageBorderColor.cgColor
+    }
 }

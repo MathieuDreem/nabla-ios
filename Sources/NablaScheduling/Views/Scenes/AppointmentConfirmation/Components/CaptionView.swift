@@ -15,11 +15,13 @@ extension AppointmentConfirmationViewController {
         override init(frame: CGRect) {
             super.init(frame: frame)
             setUp()
+            updateAppearance()
         }
         
         required init?(coder: NSCoder) {
             super.init(coder: coder)
             setUp()
+            updateAppearance()
         }
         
         // MARK: - Private
@@ -31,27 +33,35 @@ extension AppointmentConfirmationViewController {
             backgroundView.layer.cornerRadius = min(frame.height, frame.width) / 2
         }
         
+        override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+            super.traitCollectionDidChange(previousTraitCollection)
+            updateAppearance()
+        }
+        
         // MARK: Subviews
         
         private lazy var backgroundView: UIView = {
             let view = UIView()
+            // `borderColor` managed in `updateAppearance()`
             view.layer.borderWidth = 1
-            view.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor.cgColor
             view.backgroundColor = NablaTheme.AppointmentConfirmationTheme.captionBackgroundColor
             return view
         }()
         
         private lazy var imageView: UIImageView = {
             let view = UIImageView(image: .nabla.symbol(.video))
-            view.tintColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor
+            view.tintColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
+            view.contentMode = .scaleAspectFit
+            view.nabla.constraintToSize(16)
             return view
         }()
         
         private lazy var label: UILabel = {
             let view = UILabel()
             view.numberOfLines = 0
-            view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTintColor
+            view.textColor = NablaTheme.AppointmentConfirmationTheme.captionTextColor
             view.font = NablaTheme.AppointmentConfirmationTheme.captionFont
+            view.textAlignment = .center
             return view
         }()
         
@@ -67,6 +77,10 @@ extension AppointmentConfirmationViewController {
             
             addSubview(backgroundView)
             backgroundView.nabla.pinToSuperView()
+        }
+        
+        private func updateAppearance() {
+            backgroundView.layer.borderColor = NablaTheme.AppointmentConfirmationTheme.captionBorderColor.cgColor
         }
     }
 }
