@@ -108,6 +108,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
         switch sender {
         case let .me(isContiguous):
             footerLabel.textAlignment = .right
+            container.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner, .layerMinXMaxYCorner]
             container.backgroundColor = NablaTheme.Conversation.messagePatientBackgroundColor
             if isContiguous {
                 setVisibleViews([leftSpacer])
@@ -116,6 +117,7 @@ final class ConversationMessageCell<ContentView: MessageContentView>: UICollecti
             }
         case let .provider(providerViewModel):
             footerLabel.textAlignment = .left
+            container.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner,.layerMaxXMaxYCorner]
             avatarView.avatar = providerViewModel.avatar
             authorLabel.text = providerViewModel.author
             container.backgroundColor = NablaTheme.Conversation.messageProviderBackgroundColor
