@@ -26,20 +26,21 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
     func configure(with viewModel: VideoCallActionRequestContentViewModel) {
         switch viewModel.state {
         case .waiting:
-            subTitleLabel.isHidden = true
             hstack?.alignment = .center
             button.setTitle(L10n.videoCallActionRequestButtonDefault, for: .normal)
+            button.isEnabled = true
             button.isHidden = false
         case .opened:
-            subTitleLabel.isHidden = true
             hstack?.alignment = .center
             button.setTitle(L10n.videoCallActionRequestButtonInProgress, for: .normal)
+            button.isEnabled = true
             button.isHidden = false
         case .closed:
-            subTitleLabel.isHidden = false
             hstack?.alignment = .top
-            button.setTitle(L10n.videoCallActionRequestButtonClosed, for: .normal)
-            button.isHidden = true
+            button.setTitle(L10n.videoCallActionRequestButtonClosed, for: .disabled)
+            button.setTitleColor(NablaTheme.Conversation.messageProviderBackgroundColor, for: .disabled)
+            button.isHidden = false
+            button.isEnabled = false
         }
     }
     
@@ -55,7 +56,7 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
     
     private lazy var imageView: UIImageView = {
         let view = UIImageView()
-        view.image = CoreAssets.Assets.videoCallActionRequestIcon.image
+        view.image = NablaTheme.Conversation.videoCallActionRequestIcon
         return view
     }()
     
@@ -68,21 +69,11 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
         view.nabla.constraintHeight(24)
         return view
     }()
-
-    private lazy var subTitleLabel: UILabel = {
-        let view = UILabel()
-        view.text = L10n.videoCallActionRequestButtonClosed
-        view.textColor = NablaTheme.Conversation.textMessageProviderTextColor
-        view.font = NablaTheme.Fonts.body
-        view.nabla.constraintHeight(24)
-        view.numberOfLines = 1
-        return view
-    }()
     
     private lazy var button: NablaViews.PrimaryButton = {
         let view = NablaViews.PrimaryButton()
         view.theme = NablaTheme.Conversation.videoCallActionRequestButton
-        view.nabla.constraintHeight(44)
+        view.nabla.constraintHeight(34)
         view.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
         return view
     }()
@@ -90,23 +81,19 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
     private var hstack: UIStackView?
     
     private func setUpSubviews() {
-        let titlesStack = UIStackView(arrangedSubviews: [titleLabel, subTitleLabel])
-        titlesStack.axis = .vertical
-        titlesStack.distribution = .fill
-        titlesStack.spacing = 0
 
-        let hstack = UIStackView(arrangedSubviews: [imageView, titlesStack])
+        let hstack = UIStackView(arrangedSubviews: [imageView, titleLabel])
         hstack.axis = .horizontal
         hstack.distribution = .fill
         hstack.alignment = .center
-        hstack.spacing = 10
+        hstack.spacing = 8
         self.hstack = hstack
         
         let vstack = UIStackView(arrangedSubviews: [hstack, button])
         vstack.axis = .vertical
         vstack.distribution = .fill
         vstack.alignment = .fill
-        vstack.spacing = 16
+        vstack.spacing = 14
         
         addSubview(vstack)
         vstack.nabla.pinToSuperView(insets: .nabla.all(10))
