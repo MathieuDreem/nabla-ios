@@ -114,6 +114,8 @@ final class ComposerView: UIView {
     private lazy var vStack: UIStackView = {
         let stackView = UIStackView(arrangedSubviews: [replyToComposerView, hStack])
         stackView.axis = .vertical
+        stackView.setCustomSpacing(20, after: replyToComposerView)
+        stackView.setCustomSpacing(20, after: hStack)
         return stackView
     }()
     
@@ -130,7 +132,8 @@ final class ComposerView: UIView {
             ]
         )
         stackView.spacing = Constants.hStackSpacing
-        stackView.setCustomSpacing(8, after: recordAudioButton)
+        stackView.setCustomSpacing(18, after: addMediaButton)
+        stackView.setCustomSpacing(16, after: recordAudioButton)
 
         container.addSubview(stackView)
         stackView.nabla.pinToSuperView(insets: Constants.hStackMargins)
@@ -151,7 +154,7 @@ final class ComposerView: UIView {
         let textView = TextView()
         textView.font = NablaTheme.Conversation.composerFont
         textView.textColor = NablaTheme.Conversation.composerTextColor
-        textView.placeholderTextColor = NablaTheme.Conversation.composerTextColor.withAlphaComponent(0.5)
+        textView.placeholderTextColor = NablaTheme.Conversation.composerPlaceHolderTextColor
         textView.textContainerInset = .nabla.make(
             horizontal: Constants.textViewMinHeight / 4,
             vertical: (Constants.textViewMinHeight - (textView.font?.lineHeight ?? 0)) / 2
@@ -169,14 +172,11 @@ final class ComposerView: UIView {
         let view = SendButton()
         view.setImage(NablaTheme.Conversation.sendIcon, for: .normal)
         view.setImage(NablaTheme.Conversation.sendIconDisabled, for: .disabled)
+        view.nabla.constraintWidth(32)
         view.setTintColor(NablaTheme.Conversation.composerButtonHighlightedTintColor, for: .normal)
         view.setTintColor(NablaTheme.Conversation.composerButtonTintColor, for: .disabled)
         view.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
         view.isEnabled = false
-        view.nabla.constraintWidth(44)
-        NSLayoutConstraint.activate([
-            view.heightAnchor.constraint(equalTo: view.widthAnchor).nabla.with(priority: .fittingSizeLevel),
-        ])
         view.accessibilityIdentifier = "composerSendButton"
         return view
     }()
@@ -186,7 +186,7 @@ final class ComposerView: UIView {
         button.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
         button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()
 
@@ -195,7 +195,7 @@ final class ComposerView: UIView {
         button.setImage(NablaTheme.Conversation.recordAudioIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
         button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()
 
@@ -204,7 +204,7 @@ final class ComposerView: UIView {
         button.setImage(NablaTheme.Conversation.deleteAudioRecordingIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
         button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
-        button.tintColor = NablaTheme.Conversation.composerButtonTintColor
+        button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()
     
@@ -244,6 +244,7 @@ final class ComposerView: UIView {
     
     private func updateAppearance() {
         borderedContainerView.layer.borderColor = NablaTheme.Conversation.composerBorderColor.cgColor
+        borderedContainerView.layer.backgroundColor = NablaTheme.Conversation.composerBorderColor.cgColor
     }
     
     private func updateMediaComposerVisibility() {
