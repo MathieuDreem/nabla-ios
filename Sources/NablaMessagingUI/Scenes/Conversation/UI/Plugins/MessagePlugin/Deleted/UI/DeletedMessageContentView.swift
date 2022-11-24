@@ -46,7 +46,7 @@ final class DeletedMessageContentView: UIView, MessageContentView {
     private lazy var label: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
-        label.backgroundColor = .clear
+        label.backgroundColor = NablaTheme.Conversation.backgroundColor
         label.textColor = NablaTheme.Conversation.deletedMessageTextColor
         label.font = NablaTheme.Conversation.deletedMessageFont
         return label
