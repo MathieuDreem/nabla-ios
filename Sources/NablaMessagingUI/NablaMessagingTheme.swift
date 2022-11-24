@@ -157,6 +157,8 @@ public extension NablaTheme {
         public static var composerBorderColor = Colors.Stroke.subdued
         /// Color used to display the text entered by the user in the composer in the conversation screen.
         public static var composerTextColor = Colors.Text.base
+        /// Color used to display the placeholder text in the composer in the conversation screen.
+        public static var composerPlaceHolderTextColor = composerTextColor.withAlphaComponent(0.5)
         /// Font used for the text entered by the user in the composer in the conversation screen.
         public static var composerFont = Fonts.body
         /// UIImage used for the send button in the composer in the conversation screen.
@@ -169,6 +171,8 @@ public extension NablaTheme {
         public static var recordAudioIcon = UIImage(systemName: "mic")
         /// UIImage used for the cancel button to delete a recording in progress.
         public static var deleteAudioRecordingIcon = UIImage(systemName: "trash")
+        /// UIImage used for the video call action request in the message cell.
+        public static var videoCallActionRequestIcon: UIImage? = CoreAssets.Assets.videoCallActionRequestIcon.image
 
         /// UIImage used to represent a document to send in the composer in the conversation screen.
         public static var mediaComposerDocumentIcon = UIImage(systemName: "doc.text")
