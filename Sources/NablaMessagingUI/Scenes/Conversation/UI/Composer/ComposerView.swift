@@ -175,7 +175,7 @@ final class ComposerView: UIView {
         view.nabla.constraintWidth(32)
         view.setTintColor(NablaTheme.Conversation.composerButtonHighlightedTintColor, for: .normal)
         view.setTintColor(NablaTheme.Conversation.composerButtonTintColor, for: .disabled)
-        view.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        view.addTarget(self, action: #selector(didTapOnButton), for: .touchDown)
         view.isEnabled = false
         view.accessibilityIdentifier = "composerSendButton"
         return view
@@ -185,7 +185,7 @@ final class ComposerView: UIView {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
-        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpOutside)
         button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()

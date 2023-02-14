@@ -370,7 +370,7 @@ final class ConversationViewController: UIViewController, ConversationViewContra
             composerView.nabla.pinToSuperView(edges: .nabla.horizontal)
 
             loadedView.bottomAnchor.constraint(equalTo: composerView.topAnchor).isActive = true
-            loadedViewBottomConstraint = composerView.bottomAnchor.constraint(equalTo: view.keyboardLayoutGuide.topAnchor)
+            loadedViewBottomConstraint = composerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
             loadedViewBottomConstraint?.isActive = true
         } else {
             composerView.removeFromSuperview()
