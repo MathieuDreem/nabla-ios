@@ -197,7 +197,7 @@ final class VideoCallRoomViewController: UIViewController, VideoCallRoomViewCont
     
     private func makeButton(selector: Selector) -> ImageButton {
         let button = ImageButton(imageSize: CGSize(width: 28, height: 28))
-        button.addTarget(self, action: selector, for: .touchUpInside)
+        button.addTarget(self, action: selector, for: .touchDown)
         button.nabla.constraintToSize(64)
         button.layer.cornerRadius = 32
         button.layer.masksToBounds = true

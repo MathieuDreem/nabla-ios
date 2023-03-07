@@ -185,7 +185,7 @@ final class ComposerView: UIView {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.addMediaIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
-        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpOutside)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchDown)
         button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()
@@ -194,7 +194,7 @@ final class ComposerView: UIView {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.recordAudioIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
-        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchDown)
         button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()
@@ -203,7 +203,7 @@ final class ComposerView: UIView {
         let button = UIButton()
         button.setImage(NablaTheme.Conversation.deleteAudioRecordingIcon, for: .normal)
         button.nabla.constraintWidth(Constants.controlsSize)
-        button.addTarget(self, action: #selector(didTapOnButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(didTapOnButton), for: .touchDown)
         button.tintColor = NablaTheme.Conversation.composerButtonHighlightedTintColor
         return button
     }()

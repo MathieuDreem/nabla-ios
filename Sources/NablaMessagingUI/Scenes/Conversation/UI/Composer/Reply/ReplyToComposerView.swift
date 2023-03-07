@@ -95,7 +95,7 @@ class ReplyToComposerView: UIView, ReplyToComposerViewContract {
         button.tintColor = NablaTheme.Conversation.composerReplyToCloseButtonColor
         button.setContentHuggingPriority(.required, for: .horizontal)
         button.nabla.constraintToSize(.init(width: 24, height: 24))
-        button.addTarget(self, action: #selector(closeButtonTapped), for: .primaryActionTriggered)
+        button.addTarget(self, action: #selector(closeButtonTapped), for: .touchDown)
         return button
     }
 

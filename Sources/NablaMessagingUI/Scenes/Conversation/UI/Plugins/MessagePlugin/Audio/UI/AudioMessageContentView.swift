@@ -66,7 +66,7 @@ final class AudioMessageContentView: UIView, MessageContentView {
         let button = UIButton()
         button.nabla.constraintToSize(Constants.buttonSize)
         button.setBackgroundImage(UIImage(systemName: Constants.playImageName), for: .normal)
-        button.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchDown)
         return button
     }
 

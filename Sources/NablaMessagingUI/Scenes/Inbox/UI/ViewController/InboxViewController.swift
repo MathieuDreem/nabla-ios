@@ -37,7 +37,7 @@ final class InboxViewController: UIViewController, InboxViewContract {
     private lazy var createConversationButton: LoadingButton = {
         let view = LoadingButton()
         view.setImage(NablaTheme.ConversationPreview.createConversationIcon, for: .normal)
-        view.addTarget(self, action: #selector(createConversationButtonHandler), for: .touchUpInside)
+        view.addTarget(self, action: #selector(createConversationButtonHandler), for: .touchDown)
         view.tintColor = NablaTheme.ConversationPreview.createConversationColor
         return view
     }()

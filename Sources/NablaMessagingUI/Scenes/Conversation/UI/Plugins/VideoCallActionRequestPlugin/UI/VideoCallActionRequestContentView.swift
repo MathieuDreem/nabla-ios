@@ -74,7 +74,7 @@ final class VideoCallActionRequestContentView: UIView, MessageContentView {
         let view = NablaViews.PrimaryButton()
         view.theme = NablaTheme.Conversation.videoCallActionRequestButton
         view.nabla.constraintHeight(34)
-        view.addTarget(self, action: #selector(buttonHandler), for: .touchUpInside)
+        view.addTarget(self, action: #selector(buttonHandler), for: .touchDown)
         return view
     }()
 

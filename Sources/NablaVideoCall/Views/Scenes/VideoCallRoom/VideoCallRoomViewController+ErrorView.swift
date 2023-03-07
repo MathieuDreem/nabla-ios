@@ -44,7 +44,7 @@ extension VideoCallRoomViewController {
             view.layer.cornerRadius = 10
             view.layer.masksToBounds = true
             view.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-            view.addTarget(self, action: #selector(buttonTapHandler), for: .touchUpInside)
+            view.addTarget(self, action: #selector(buttonTapHandler), for: .touchDown)
             view.contentEdgeInsets = .init(top: 8, left: 16, bottom: 8, right: 16)
             return view
         }()

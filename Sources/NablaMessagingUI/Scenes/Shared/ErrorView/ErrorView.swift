@@ -54,7 +54,7 @@ final class ErrorView: UIView {
     
     private func makeButton() -> UIButton {
         let button = UIButton()
-        button.addTarget(self, action: #selector(buttonDidTap), for: .touchUpInside)
+        button.addTarget(self, action: #selector(buttonDidTap), for: .touchDown)
         button.setTitleColor(NablaTheme.ErrorView.retryButtonTitleColor, for: .normal)
         button.titleLabel?.font = NablaTheme.ErrorView.retryButtonTitleFont
         return button
