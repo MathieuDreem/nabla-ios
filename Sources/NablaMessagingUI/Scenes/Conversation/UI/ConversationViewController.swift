@@ -97,14 +97,18 @@ final class ConversationViewController: UIViewController, ConversationViewContra
         let viewController = ImageDetailViewController()
         let presenter = ImageDetailPresenterImpl(viewContract: viewController, image: image)
         viewController.presenter = presenter
-        show(viewController, sender: nil)
+        viewController.modalPresentationStyle = .overFullScreen
+        viewController.view.backgroundColor = nil
+        present(viewController, animated: true)
     }
 
     func displayDocumentDetail(for document: DocumentFile) {
         let viewController = DocumentDetailViewController()
         let presenter = DocumentDetailPresenterImpl(viewContract: viewController, document: document)
         viewController.presenter = presenter
-        show(viewController, sender: nil)
+        viewController.modalPresentationStyle = .overFullScreen
+        viewController.view.backgroundColor = nil
+        present(viewController, animated: true)
     }
     
     func displayDocumentScanner() {

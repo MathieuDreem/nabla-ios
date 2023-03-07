@@ -3,7 +3,7 @@ import LinkPresentation
 import NablaCore
 import UIKit
 
-final class ImageDetailViewController: UIViewController, ImageDetailViewContract {
+final class ImageDetailViewController: UIPanViewController, ImageDetailViewContract {
     var presenter: ImageDetailPresenter?
     
     // MARK: - Lifecycle
@@ -40,6 +40,7 @@ final class ImageDetailViewController: UIViewController, ImageDetailViewContract
         )
         view.backgroundColor = NablaTheme.ImageDetail.backgroundColor
         view.addSubview(imageView)
+        setUpPan(with: imageView)
         imageView.nabla.pinToSuperView()
     }
     

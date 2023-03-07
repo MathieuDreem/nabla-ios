@@ -3,7 +3,7 @@ import NablaCore
 import UIKit
 import WebKit
 
-final class DocumentDetailViewController: UIViewController, DocumentDetailViewContract {
+final class DocumentDetailViewController: UIPanViewController, DocumentDetailViewContract {
     // MARK: - Lifecycle
     
     override public func viewDidLoad() {
@@ -51,6 +51,7 @@ final class DocumentDetailViewController: UIViewController, DocumentDetailViewCo
             action: #selector(shareAction)
         )
         view.addSubview(pdfView)
+        setUpPan(with: pdfView)
         pdfView.nabla.pinToSuperView()
     }
     
