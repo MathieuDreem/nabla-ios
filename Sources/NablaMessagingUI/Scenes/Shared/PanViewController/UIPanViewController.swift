@@ -9,12 +9,6 @@ import UIKit
 
 open class UIPanViewController: UIViewController {
     // MARK: - Lifecycle
-    
-    @available(*, unavailable)
-    public required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     open override func viewDidAppear(_ animated: Bool) {
         originalPosition = pannedView.center
     }
