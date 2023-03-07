@@ -61,7 +61,7 @@ class ConversationMessagePreviewView: UIView {
 
         let vStack = UIStackView(arrangedSubviews: [authorLabel, hStack])
         vStack.axis = .vertical
-        vStack.spacing = 4
+        vStack.spacing = 0
 
         let stackView = UIStackView(arrangedSubviews: [separatorView, vStack, previewImageView])
         stackView.axis = .horizontal
